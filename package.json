@@ -1,0 +1,32 @@
+{
+  "name": "loadcss",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "callasync": "^1.0.0"
+  },
+  "devDependencies": {
+    "browserify": "^14.1.0",
+    "node-qunit-phantomjs": "^1.5.0",
+    "qunitjs": "^2.1.1",
+    "uglify-js": "^2.7.5"
+  },
+  "scripts": {
+    "test": "node-qunit-phantomjs test/index.html",
+    "build": "browserify index.js -s loadcss | uglifyjs -o loadcss.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yefremov/loadcss.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yefremov/loadcss/issues"
+  },
+  "homepage": "https://github.com/yefremov/loadcss#readme"
+}
