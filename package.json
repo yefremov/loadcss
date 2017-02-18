@@ -11,6 +11,11 @@
   },
   "devDependencies": {
     "browserify": "^14.1.0",
+    "karma": "^1.4.1",
+    "karma-coverage": "^1.1.1",
+    "karma-html2js-preprocessor": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-qunit": "^1.2.1",
     "node-qunit-phantomjs": "^1.5.0",
     "qunitjs": "^2.1.1",
     "uglify-js": "^2.7.5"
@@ -18,7 +23,7 @@
   "scripts": {
     "test": "node-qunit-phantomjs test/index.html",
     "prebuild": "rm -rf dist",
-    "build": "mkdir -p dist && browserify index.js -s loadcss | uglifyjs -m -o dist/loadcss.js"
+    "build": "mkdir -p dist && browserify index.js -s loadcss -o dist/loadcss.js"
   },
   "repository": {
     "type": "git",
@@ -29,5 +34,16 @@
   "bugs": {
     "url": "https://github.com/yefremov/loadcss/issues"
   },
-  "homepage": "https://github.com/yefremov/loadcss#readme"
+  "homepage": "https://github.com/yefremov/loadcss#readme",
+  "config": {
+    "blanket": {
+      "pattern": [
+        ""
+      ],
+      "data-cover-never": [
+        "node_modules",
+        "test"
+      ]
+    }
+  }
 }

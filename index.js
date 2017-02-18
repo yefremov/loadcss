@@ -80,17 +80,19 @@ var sheets = doc.styleSheets;
  */
 
 function loadcss(href, options) {
-  // default options
   options = options || {};
 
   // if second argument is a `complete` function
   if (isFunction(options)) {
-    options = { complete: options };
+    options = {
+      complete: options
+    };
   }
 
   // completion callback
-  var complete = options.complete || function () { /* no-op */ };
-
+  var complete = options.complete || function () {
+    // no-op
+  };
 
   // reference to stylesheets media type
   var media = options.media ? options.media : 'all';
@@ -124,20 +126,22 @@ function loadcss(href, options) {
  }
 
   // polls stylesheets till `href` is resolved
-  function loading() {
+  function loading(links) {
     var loaded = 0;
     var index = -1;
-    var length = hrefs.length;
+    var length = links.length;
 
     // test wether document has applied stylesheets
     while (++index < length) {
-      if (exists(href[index]) && ++loaded === length) {
+      if (exists(links[index].href) && ++loaded === length) {
         // executes when all stylesheets where loaded.
         return complete(links);
       }
     }
     // shedule polling again
-    callasync(loading);
+    callasync(function () {
+      loading(links);
+    });
   }
 
   // test wether `href` is resolved by document
@@ -152,7 +156,7 @@ function loadcss(href, options) {
       }
 
       // test wether `href` is in document style sheets
-      if (sheets[index].href.indexOf(href) > -1) {
+      if (sheets[index].href === href) {
         return true;
       }
     }
@@ -174,7 +178,9 @@ function loadcss(href, options) {
       before.parentNode.insertBefore(links[index], referenceNode);
     }
     // shedule polling of loaded style sheets
-    callasync(loading);
+    callasync(function () {
+      loading(links);
+    });
   });
 
   return links;
