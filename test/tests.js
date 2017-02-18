@@ -1,61 +1,110 @@
+(function (window) {
 
-QUnit.test("should be exposed to window object", function( assert ) {
-  assert.expect(2);
-  assert.ok(window.loadcss, "loadcss should exist on the window object" );
-  assert.ok(typeof window.loadcss === "function", "loadcss should be a function" );
-});
+  QUnit.assert.contains = function(needle, target, message) {
+    var actual = target.indexOf(needle) > -1;
 
-QUnit.test("should load a single css file", function( assert ) {
-  assert.expect(1);
+    this.pushResult({
+      result: actual,
+      actual: actual,
+      expected: needle,
+      message: message
+    });
+  };
 
-  var done = assert.async(1);
-
-  loadcss("fixtures/a.css", function (links) {
-    assert.ok(links[0].href.indexOf("fixtures/a.css") > -1);
-    done();
-  });
-});
-
-QUnit.test("should load a multiple css files", function( assert ) {
-  assert.expect(2);
-
-  var done = assert.async(1);
-
-  loadcss(["fixtures/b.css", "fixtures/c.css"], function (links) {
-    assert.ok(links[0].href.indexOf("fixtures/b.css") > -1);
-    assert.ok(links[1].href.indexOf("fixtures/c.css") > -1);
-    done();
+  QUnit.test('should be exposed to window object', function( assert ) {
+    assert.expect(2);
+    assert.ok(window.loadcss, 'loadcss should exist on the window object');
+    assert.ok(typeof window.loadcss === 'function', 'loadcss should be a function');
   });
 
-  QUnit.test("should load css with a media specified media type", function( assert ) {
+  QUnit.test('should load a single css file', function( assert ) {
     assert.expect(1);
 
     var done = assert.async(1);
 
-    loadcss(["fixtures/d.css"], {
-      media: "screen",
-      done: function (links) {
-        console.log(links);
-        assert.ok(links[0].media === 'screen');
-        done();
-      }
+    loadcss('fixtures/a.css', function (links) {
+      var a = links.shift();
+
+      assert.contains('fixtures/a.css', a.href);
+      done();
     });
   });
 
-  QUnit.test("should insert line before a specified element", function( assert ) {
-    assert.expect(1);
+  QUnit.test('should load a multiple css files', function( assert ) {
+    assert.expect(2);
 
     var done = assert.async(1);
 
-    var element = document.getElementById("before");
+    loadcss(['fixtures/b.css', 'fixtures/c.css'], function (links) {
+      var b = links.shift();
+      var c = links.shift();
 
-    loadcss(["fixtures/e.css"], {
-      before: element,
-      done: function (links) {
-        assert.equal(links[0].nextElementSibling, element);
+      assert.contains('fixtures/b.css', b.href);
+      assert.contains('fixtures/c.css', c.href);
+      done();
+    });
+
+    QUnit.test('should default media type to all devices', function( assert ) {
+      assert.expect(1);
+
+      var done = assert.async(1);
+
+      loadcss(['fixtures/d.css'], function (links) {
+        var d = links.shift();
+
+        assert.equal(d.media, 'all');
         done();
-      }
+      });
+    });
+
+    QUnit.test('should set media type specified in options', function( assert ) {
+      assert.expect(1);
+
+      var done = assert.async(1);
+
+      loadcss(['fixtures/e.css'], {
+        media: 'print',
+        complete: function (links) {
+          var e = links.shift();
+
+          assert.ok(e.media === 'print');
+          done();
+        }
+      });
+    });
+
+    QUnit.test('should insert link before specified node', function(assert) {
+      assert.expect(1);
+
+      var done = assert.async(1);
+
+      var element = document.getElementById('loader');
+
+      loadcss(['fixtures/f.css'], {
+        before: element,
+        complete: function (links) {
+          var f = links.shift();
+
+          assert.equal(f.nextElementSibling, element);
+          done();
+        }
+      });
+    });
+
+    QUnit.test('should fire callback after stylesheet is loaded', function(assert) {
+      assert.expect(1);
+
+      var done = assert.async(1);
+
+      loadcss(['fixtures/g.css'], {
+        complete: function (links) {
+          var g = links.shift();
+          var header = document.getElementById("header");
+
+          assert.equal(getComputedStyle(header).color, 'rgb(238, 130, 238)');
+          done();
+        }
+      });
     });
   });
-
-});
+}(window));

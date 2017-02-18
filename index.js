@@ -58,132 +58,124 @@ function isFunction(value) {
 }
 
 /**
+ * Reference to the document.
+ */
+
+var doc = document;
+
+/**
+ * Reference to the document style sheets.
+ */
+
+var sheets = doc.styleSheets;
+
+/**
  * Loads and inserts stylesheets with the specified `href` and `options`;
  *
  * @param {Array|string} href
- * @param {Object} [options]
+ * @param {Object|Function} [options]
  * @param {DOMElement} [options.before]
  * @param {string} [options.media]
- * @param {Function} [options.done]
+ * @param {Function} [options.complete]
  */
 
 function loadcss(href, options) {
-  var doc = document;
-  var styles = doc.styleSheets;
-  var hrefs = isArray(href) ? href : [href]; // cast href to array of hrefs
-  var length = hrefs.length;
+  // default options
+  options = options || {};
 
-  // reference to node to insert links before
+  // if second argument is a `complete` function
+  if (isFunction(options)) {
+    options = { complete: options };
+  }
+
+  // completion callback
+  var complete = options.complete || function () { /* no-op */ };
+
+
+  // reference to stylesheets media type
+  var media = options.media ? options.media : 'all';
+
   var before;
 
-  if (options && options.before) {
+  if (options.before) {
     before = options.before;
   } else {
-    // if no before node specified, then default reference to the last node of
-    // documents head element
+    // when no before node specified, reference the last children node of the
+    // document body or head
     var refs = (doc.body || doc.getElementsByTagName('head')[0]).childNodes;
     before = refs[refs.length - 1];
   }
 
-  // reference to stylesheets media type
-  var media;
+  // hrefs to load and insert to the document
+  var hrefs = isArray(href) ? href : [href];
 
-  if (options && options.media) {
-    media = options.media;
-  } else {
-    // if no media type specified, then default  media type to `all` value
-    media = 'all';
-  }
-
-  // reference to a callback function
-  var done = isFunction(options) ? options : options.done || function () {};
-
-  // reference to array of link nodes
+  // array of link elements
   var links = [];
 
-  // insert link when document body is processed
-  ready(function () {
-    var index = -1;
+  // execute `callback` when body is parsed and ready
+ function ready(callback) {
+   if (doc.body){
+     return callback();
+   }
 
-    while (++index < length) {
-      var referenceNode;
+   callasync(function () {
+     ready(callback);
+   });
+ }
 
-      if (options && options.before) {
-        referenceNode = before;
-      } else {
-        referenceNode = before.nextSibling;
-      }
-
-      links[index] = doc.createElement('link');
-
-      links[index].href = hrefs[index];
-      links[index].media = media;
-
-      links[index].rel = 'stylesheet';
-
-      before.parentNode.insertBefore(links[index], referenceNode);
-    }
-
-    load(); // begin stylesheets loading
-  });
-
-  /**
-   * Executes `callback` when document body is ready
-   * @param {Function} callback
-   */
-
-  function ready(callback) {
-    if (doc.body){
-      return callback();
-    }
-
-    callasync(function () {
-      ready(callback);
-    });
-  }
-
-  function load() {
-    var index = -1;
+  // polls stylesheets till `href` is resolved
+  function loading() {
     var loaded = 0;
+    var index = -1;
+    var length = hrefs.length;
+
     // test wether document has applied stylesheets
     while (++index < length) {
       if (exists(href[index]) && ++loaded === length) {
-        // when all stylesheets applied, call done and exit
-
+        // executes when all stylesheets where loaded.
         return complete(links);
       }
     }
-
-    // continue loading stylesheets (recursevly)
-    callasync(load);
+    // shedule polling again
+    callasync(loading);
   }
 
-  /**
-   * Test wether stylesheet with `href` has been applied to document.
-   * @param {string} href Href attribute of the stylesheet.
-   * @return {boolean}
-   */
-
+  // test wether `href` is resolved by document
   function exists(href) {
     var index = -1;
-    var length = styles.length;
+    var length = sheets.length;
 
     while (++index < length) {
-      if (styles[index].href && styles[index].href.indexOf(href) > -1) {
+      // couple of quick checks on the style sheet
+      if (sheets[index].href === null || sheets[index].href.length === 0) {
+        continue;
+      }
+
+      // test wether `href` is in document style sheets
+      if (sheets[index].href.indexOf(href) > -1) {
         return true;
       }
     }
-
-    return false;
   }
 
-  /**
-   *  Executes when all stylesheets where loaded.
-   */
+  // when document is parsed and ready
+  ready(function () {
+    var index = -1;
+    var length = hrefs.length;
+    var referenceNode = options.before ? before : before.nextSibling;
 
-  function complete() {
-    done(links);
-  }
+    while (++index < length) {
+      links[index] = doc.createElement('link');
+
+      links[index].rel = 'stylesheet';
+      links[index].href = hrefs[index];
+      links[index].media = media;
+
+      before.parentNode.insertBefore(links[index], referenceNode);
+    }
+    // shedule polling of loaded style sheets
+    callasync(loading);
+  });
 
   return links;
 }

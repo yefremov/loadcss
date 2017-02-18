@@ -17,7 +17,8 @@
   },
   "scripts": {
     "test": "node-qunit-phantomjs test/index.html",
-    "build": "browserify index.js -s loadcss | uglifyjs -o loadcss.js"
+    "prebuild": "rm -rf dist",
+    "build": "mkdir -p dist && browserify index.js -s loadcss | uglifyjs -m -o dist/loadcss.js"
   },
   "repository": {
     "type": "git",
