@@ -169,7 +169,7 @@ function loadcss(href, options) {
     var length = styles.length;
 
     while (++index < length) {
-      if (styles[index].href.indexOf(href) > -1) {
+      if (styles[index].href && styles[index].href.indexOf(href) > -1) {
         return true;
       }
     }
