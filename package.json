@@ -1,7 +1,7 @@
 {
   "name": "loadcss",
   "version": "0.0.0",
-  "description": "",
+  "description": "Fast and reliable utility to asynchronously load multiple css files",
   "main": "index.js",
   "directories": {
     "example": "example"
@@ -23,7 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/yefremov/loadcss.git"
   },
-  "author": "",
+  "author": "Anton Yefremov",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/yefremov/loadcss/issues"
