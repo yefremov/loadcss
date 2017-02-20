@@ -17,8 +17,8 @@
 
   QUnit.test('should be exposed to window object', function( assert ) {
     assert.expect(2);
-    assert.ok(window.loadcss, 'loadcss should exist on the window object');
-    assert.ok(typeof window.loadcss === 'function', 'loadcss should be a function');
+    assert.ok(window.loadcss);
+    assert.ok(typeof window.loadcss === 'function');
   });
 
   QUnit.test('should load a single css file', function( assert ) {
@@ -97,7 +97,7 @@
       });
     });
 
-    QUnit.skip('should fire callback after stylesheet is loaded', function(assert) {
+    QUnit.test('should fire callback after stylesheet is loaded', function(assert) {
       assert.expect(1);
 
       var done = assert.async(1);
@@ -107,7 +107,6 @@
       var header = window.document.createElement('div');
 
       header.innerHTML = 'Hello, World!';
-      header.className = 'violet';
       header.id = 'header';
 
       fixtures.appendChild(header);
@@ -115,7 +114,9 @@
       loadcss(['fixtures/g.css'], {
         complete: function (links) {
           var g = links.shift();
+
           assert.equal(getStyles(header).color, 'rgb(238, 130, 238)');
+          done();
         }
       });
     });

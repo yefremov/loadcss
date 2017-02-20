@@ -4,7 +4,8 @@ node_js:
   - "6.1"
   - "5.11"
   - "iojs"
+  - "node"
 script:
   - "npm run build && npm test"
 after_success:
-  - "rm loadcss.js"
+  - "rm -rf dist"

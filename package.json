@@ -3,19 +3,12 @@
   "version": "0.0.1",
   "description": "Fast and reliable utility to asynchronously load multiple css files",
   "main": "index.js",
-  "directories": {
-    "example": "example"
-  },
+  "keywords": ["css", "stylesheets", "preload", "load"],
   "dependencies": {
     "callasync": "^1.0.0"
   },
   "devDependencies": {
     "browserify": "^14.1.0",
-    "karma": "^1.4.1",
-    "karma-coverage": "^1.1.1",
-    "karma-html2js-preprocessor": "^1.1.0",
-    "karma-phantomjs-launcher": "^1.0.2",
-    "karma-qunit": "^1.2.1",
     "node-qunit-phantomjs": "^1.5.0",
     "qunitjs": "^2.1.1",
     "uglify-js": "^2.7.5"
@@ -29,21 +22,10 @@
     "type": "git",
     "url": "git+https://github.com/yefremov/loadcss.git"
   },
-  "author": "Anton Yefremov",
-  "license": "ISC",
+  "author": "Anton Yefremov <anton.yefremov@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/yefremov/loadcss/issues"
   },
-  "homepage": "https://github.com/yefremov/loadcss#readme",
-  "config": {
-    "blanket": {
-      "pattern": [
-        ""
-      ],
-      "data-cover-never": [
-        "node_modules",
-        "test"
-      ]
-    }
-  }
+  "homepage": "https://github.com/yefremov/loadcss#readme"
 }
