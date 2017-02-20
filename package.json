@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Fast and reliable utility to asynchronously load multiple css files",
   "main": "index.js",
-  "directories": {
-    "example": "example"
-  },
+  "keywords": ["css", "stylesheets", "preload", "load"],
   "dependencies": {
     "callasync": "^1.0.0"
   },
@@ -17,14 +15,15 @@
   },
   "scripts": {
     "test": "node-qunit-phantomjs test/index.html",
-    "build": "browserify index.js -s loadcss | uglifyjs -o loadcss.js"
+    "prebuild": "rm -rf dist",
+    "build": "mkdir -p dist && browserify index.js -s loadcss -o dist/loadcss.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yefremov/loadcss.git"
   },
-  "author": "Anton Yefremov",
-  "license": "ISC",
+  "author": "Anton Yefremov <anton.yefremov@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/yefremov/loadcss/issues"
   },
