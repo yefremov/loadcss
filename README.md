@@ -1,7 +1,5 @@
-# loadcss
+# loadcss [![Build Status](https://travis-ci.org/yefremov/loadcss.svg?branch=master)](https://travis-ci.org/yefremov/loadcss) [![npm version](https://badge.fury.io/js/loadcss.svg)](https://badge.fury.io/js/loadcss)
 
-[![npm version](https://badge.fury.io/js/loadcss.svg)](https://badge.fury.io/js/loadcss)
-[![Build Status](https://travis-ci.org/yefremov/loadcss.svg?branch=master)](https://travis-ci.org/yefremov/loadcss)
 
 Fast and reliable utility to asynchronously load multiple css files and apply to
 the document.
