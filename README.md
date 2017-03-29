@@ -29,7 +29,6 @@ loadcss(['/a/foo.css', '/b/bar.css'], links => {
 ## Running tests
 
 ```bash
-$ npm install
 $ npm test
 ```
 
